@@ -5,7 +5,7 @@ app=Flask(__name__)
 @app.route('/')
 def home():
     titulo="IDGS-802-Flask"
-    lista= ['Raul','Pepe','Ana']
+    lista= ['Raul','Pepe','Ana', 'Juan']
     return render_template('index.html', titulo=titulo, lista=lista)
 
 @app.route('/formularios')
