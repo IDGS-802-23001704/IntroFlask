@@ -2,19 +2,21 @@
 
 {% block content %} 
 
-<form action ="/resultado" method="post">
+<form action ="/operasBas" method="post">
 
 <div class="mb-3">
 
     <label for="n1" class="form-label">Numero 1:</label>
-    <input type="text" class="form.control" id="n1" name="n1">
+    <input type="text" class="form-control" id="n1" name="n1">
 </div>
 
 <div class="mb-3">
 
     <label for="n2" class="form-label">Numero 2:</label>
-    <input type="text" class="form.control" id="n2" name="n2">
+    <input type="text" class="form-control" id="n2" name="n2">
 </div>
+
+
 
 <div class="mb-3">
 <label for="op" class="form-choice">Seleccione una operacion: </label><br>
@@ -31,5 +33,7 @@
 
 <button type="submit" class="btn btn-primary">Calcular</button>
 </form>
+
+<h1> La suma de {{ n1 }} + {{  n2 }} =  {{"%.2f"|format(res)}}</h1>
 
 {% endblock %}
