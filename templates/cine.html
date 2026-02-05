@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% import "_macros.html" as macros %}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4 text-white">Cinepolis</h1>
+
+    <form action="/cine" method="POST" novalidate>
+        {{ form.csrf_token }}
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card p-3 shadow-none bg-transparent border border-light text-white">
+                    <h4 class="card-title">Datos de Compra</h4>
+                    <hr class="bg-white">
+                    
+                    <div class="mb-3">
+                        <span class="text-white">
+                            {{ macros.campoNuevo(form.nombre, class="form-control", placeholder="Nombre del cliente") }}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <span class="text-white">
+                            {{ macros.campoNuevo(form.compradores, class="form-control", placeholder="Número de personas") }}
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white"><b>{{ form.tarjeta.label }}</b></label>
+                        <div style="padding: 10px; border: 1px solid white; border-radius: 5px;">
+                            {% for subfield in form.tarjeta %}
+                                <div class="form-check form-check-inline text-white">
+                                    {{ subfield(class="form-check-input") }}
+                                    {{ subfield.label(class="form-check-label") }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <span class="text-white">
+                            {{ macros.campoNuevo(form.boletas, class="form-control", placeholder="Total de boletas") }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                {% if mensaje %}
+                    <div class="alert {{ 'alert-danger' if 'Error' in mensaje else 'alert-success' }} w-100 text-center shadow" style="min-height: 200px; display: flex; flex-direction: column; justify-content: center;">
+                        <h3 class="text-dark">{{ mensaje }}</h3> {% if total > 0 %}
+                            <hr>
+                            <p class="mb-0 text-dark">Total a Pagar:</p>
+                            <h1 class="display-4 text-dark">${{ "{:,.2f}".format(total) }}</h1>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="text-center text-white opacity-75 border rounded p-5 w-100" style="border: 2px dashed white !important;">
+                        <h3>Resultado</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold text-primary shadow">
+                    Calcular Pago
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

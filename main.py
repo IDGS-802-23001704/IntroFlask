@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
-from flask import flash
 from flask_wtf.csrf import CSRFProtect
+from flask import flash
+from forms import CineForm, UserForms
 import math
-import forms
 
 app = Flask(__name__)
 app.secret_key='Clave secreta'
@@ -13,6 +13,42 @@ def home():
     titulo = "IDGS-802-Flask"
     lista = ['Raul', 'Pepe', 'Ana', 'Juan']
     return render_template('index.html', titulo=titulo, lista=lista)
+
+
+@app.route("/cine", methods=["GET", "POST"])
+def cine():
+    form = CineForm(request.form)
+    mensaje = ""
+    total_pagar = 0.0
+    
+    if request.method == 'POST' and form.validate():
+        nombre = form.nombre.data
+        compradores = form.compradores.data
+        tarjeta = form.tarjeta.data
+        boletas = form.boletas.data
+
+        max_boletas = compradores * 7
+        precio_boleto = 12
+        
+        if boletas > max_boletas:
+            mensaje = f"Error: Solo puedes comprar {max_boletas} boletos para {compradores} persona"
+        else:
+            subtotal = boletas * precio_boleto
+            descuento = 0
+            
+            if boletas > 5:
+                descuento = 0.15
+            elif 3 <= boletas <= 5:
+                descuento = 0.10
+            total = subtotal * (1 - descuento)
+
+            if tarjeta == 'Si':
+                total = total * 0.90
+            total_pagar = total
+            mensaje = f"Compra procesada"
+
+    return render_template("cine.html", form=form, mensaje=mensaje, total=total_pagar)
+
 
 @app.route('/usuarios', methods=["GET", "POST"])
 def usuarios():
@@ -137,5 +173,5 @@ def distancia():
 
 if __name__ == '__main__':
     csrf.init_app(app)
-    app.run(debug=True, port=3000)
+    app.run(debug=True)
 
